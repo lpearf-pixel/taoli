@@ -1,0 +1,15 @@
+name: xray-vless-vmess-chain
+
+services:
+  xray-chain:
+    image: ${XRAY_IMAGE:-ghcr.io/xtls/xray-core:26.5.9}
+    container_name: xray-vless-vmess-chain
+    restart: unless-stopped
+    command:
+      - run
+      - -c
+      - /usr/local/etc/xray/config.json
+    ports:
+      - "${CHAIN_BIND_HOST:-127.0.0.1}:${CHAIN_LOCAL_PORT:-1286}:1080/tcp"
+    volumes:
+      - ./config/config.json:/usr/local/etc/xray/config.json:ro
