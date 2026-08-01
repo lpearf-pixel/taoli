@@ -1,0 +1,75 @@
+{
+  "log": {
+    "loglevel": "__XRAY_LOG_LEVEL__"
+  },
+  "inbounds": [
+    {
+      "tag": "socks-chain-in",
+      "listen": "0.0.0.0",
+      "port": 1080,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "out",
+      "protocol": "vmess",
+      "settings": {
+        "address": "__US_VMESS_ADDRESS__",
+        "port": "__US_VMESS_PORT__",
+        "id": "__US_VMESS_UUID__",
+        "security": "__US_VMESS_SECURITY__",
+        "level": 0
+      },
+      "proxySettings": {
+        "tag": "transit",
+        "transportLayer": false
+      },
+      "mux": {
+        "enabled": false
+      }
+    },
+    {
+      "tag": "transit",
+      "protocol": "vless",
+      "settings": {
+        "address": "__VLESS_ADDRESS__",
+        "port": "__VLESS_PORT__",
+        "id": "__VLESS_UUID__",
+        "encryption": "__VLESS_ENCRYPTION__",
+        "flow": "__VLESS_FLOW__",
+        "level": 0
+      },
+      "streamSettings": {
+        "method": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "serverName": "__REALITY_SERVER_NAME__",
+          "fingerprint": "__REALITY_FINGERPRINT__",
+          "password": "__REALITY_PUBLIC_KEY__",
+          "shortId": "__REALITY_SHORT_ID__",
+          "spiderX": "__REALITY_SPIDER_X__"
+        }
+      },
+      "mux": {
+        "enabled": false
+      }
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "socks-chain-in"
+        ],
+        "outboundTag": "out"
+      }
+    ]
+  }
+}
